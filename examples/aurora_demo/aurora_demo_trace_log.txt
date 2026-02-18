@@ -1,0 +1,127 @@
+============================================================
+DRTL Runtime — Aurora Fact-Check (v0.1.1)
+============================================================
+
+[TRACE] Topology: /Users/et/Projects/parley/runtime/topologies/aurora_demo.yaml
+
+[TRACE] Node: generate_summary (gemini/gemini-2.5-flash)
+  > Input: Summarize the key features of Aurora Serverless v3
+  > Output: Aurora Serverless v3 is an evolutionary step building upon the highly capable Aurora Serverless v2 architecture. While not a complete re-architecture from v2, the "v3" nomenclature often refers to the latest enhancements and capabilities, particularly around the **Data API** and general refinements to the existing v2 engine.
+
+Here are its key features, largely inheriting from Serverless v2 with specific "v3" focus points:
+
+1.  **Rapid, Granular Scaling:**
+    *   **Automatic:** Scales compute capacity up and down automatically in seconds based on workload demand.
+    *   **Granular:** Scales in fine-grained increments of 0.5 ACUs (Aurora Capacity Units), ensuring efficient resource utilization.
+    *   **Non-disruptive:** Scaling operations are seamless, with no application downtime or connection drops.
+    *   **Wide Range:** Can scale from a minimum of 0.5 ACU to potentially hundreds, handling a vast spectrum of workloads.
+
+2.  **Pay-per-Second Billing:**
+    *   You only pay for the Aurora Capacity Units (ACUs) consumed per second, plus standard Aurora storage and I/O costs. This eliminates the need to over-provision for peak loads and drastically reduces costs for intermittent or unpredictable workloads.
+
+3.  **Operational Simplicity:**
+    *   **No Server Management:** Eliminates the need to provision, patch, or manage database servers. AWS handles all underlying infrastructure.
+    *   **Automated Backups:** Integrated with Aurora's continuous backup and point-in-time recovery features.
+
+4.  **Data API (Key "v3" emphasis):**
+    *   Allows secure HTTP/HTTPS access to your Aurora database, making it easy to connect from serverless applications (like AWS Lambda, AWS AppSync, or web applications) without requiring traditional database drivers.
+    *   This API can also facilitate the *resumption of idle databases*, offering a modern approach to the original Serverless v1's "pause and resume" functionality, but with the performance benefits of the v2 engine.
+
+5.  **Aurora Compatibility & Performance:**
+    *   **MySQL and PostgreSQL Compatibility:** Supports specific versions of MySQL and PostgreSQL engines, making it easy to migrate existing applications.
+    *   **High Performance:** Leverages Aurora's distributed, fault-tolerant, self-healing storage system, providing high performance and durability (typically 6-way replication across 3 AZs).
+    *   **High Availability:** Designed for high availability with multi-AZ deployment for resiliency.
+
+6.  **Ideal Use Cases:**
+    *   Applications with **unpredictable, spiky, or intermittent workloads**.
+    *   **New application development** where future scale is unknown.
+    *   **SaaS applications** where per-tenant costs need to be optimized.
+    *   **Development and testing environments** that are only active during work hours.
+    *   Microservices architectures leveraging serverless compute.
+
+In essence, Aurora Serverless v3 (or the latest v2 capabilities often referred to as such) combines the robust performance and enterprise-grade features of Amazon Aurora with the operational simplicity and cost-effectiveness of a true serverless database, making it ideal for modern, dynamic cloud applications.
+
+[TRACE] Node: extract_claims (openai/gpt-4o-mini)
+  > Input: Analyze this text and extract claims into JSON:
+
+Aurora Serverless v3 is an evolutionary step building upon the highly capable Aurora Serverless v2 architecture. While not a complete re-architecture from v2, the "v3" nomenclature often refers to the latest enhancements and capabilities, particularly around the **Data API** and general refinements to the existing v2 engine.
+
+Here are its key features, largely inheriting from Serverless v2 with specific "v3" focus points:
+
+1.  **Rapid, Granular Scaling:**
+    *   **Automatic:** Scales compute capacity up and down automatically in seconds based on workload demand.
+    *   **Granular:** Scales in fine-grained increments of 0.5 ACUs (Aurora Capacity Units), ensuring efficient resource utilization.
+    *   **Non-disruptive:** Scaling operations are seamless, with no application downtime or connection drops.
+    *   **Wide Range:** Can scale from a minimum of 0.5 ACU to potentially hundreds, handling a vast spectrum of workloads.
+
+2.  **Pay-per-Second Billing:**
+    *   You only pay for the Aurora Capacity Units (ACUs) consumed per second, plus standard Aurora storage and I/O costs. This eliminates the need to over-provision for peak loads and drastically reduces costs for intermittent or unpredictable workloads.
+
+3.  **Operational Simplicity:**
+    *   **No Server Management:** Eliminates the need to provision, patch, or manage database servers. AWS handles all underlying infrastructure.
+    *   **Automated Backups:** Integrated with Aurora's continuous backup and point-in-time recovery features.
+
+4.  **Data API (Key "v3" emphasis):**
+    *   Allows secure HTTP/HTTPS access to your Aurora database, making it easy to connect from serverless applications (like AWS Lambda, AWS AppSync, or web applications) without requiring traditional database drivers.
+    *   This API can also facilitate the *resumption of idle databases*, offering a modern approach to the original Serverless v1's "pause and resume" functionality, but with the performance benefits of the v2 engine.
+
+5.  **Aurora Compatibility & Performance:**
+    *   **MySQL and PostgreSQL Compatibility:** Supports specific versions of MySQL and PostgreSQL engines, making it easy to migrate existing applications.
+    *   **High Performance:** Leverages Aurora's distributed, fault-tolerant, self-healing storage system, providing high performance and durability (typically 6-way replication across 3 AZs).
+    *   **High Availability:** Designed for high availability with multi-AZ deployment for resiliency.
+
+6.  **Ideal Use Cases:**
+    *   Applications with **unpredictable, spiky, or intermittent workloads**.
+    *   **New application development** where future scale is unknown.
+    *   **SaaS applications** where per-tenant costs need to be optimized.
+    *   **Development and testing environments** that are only active during work hours.
+    *   Microservices architectures leveraging serverless compute.
+
+In essence, Aurora Serverless v3 (or the latest v2 capabilities often referred to as such) combines the robust performance and enterprise-grade features of Amazon Aurora with the operational simplicity and cost-effectiveness of a true serverless database, making it ideal for modern, dynamic cloud applications.
+
+Return a JSON object with:
+- product_names: List of AWS products, services, or version numbers mentioned
+- urls: List of any URLs or documentation links
+- performance_claims: List of any quantitative claims (speeds, costs, percentages)
+
+  > Format: json
+  > Output: {'product_names': ['Aurora Serverless v3', 'Aurora Serverless v2', 'AWS Lambda', 'AWS AppSync', 'MySQL', 'PostgreSQL'], 'urls': [], 'performance_claims': ['Scales compute capacity up and down automatically in seconds based on workload demand', 'Scales in fine-grained increments of 0.5 ACUs (Aurora Capacity Units)', 'Can scale from a minimum of 0.5 ACU to potentially hundreds', 'You only pay for the Aurora Capacity Units (ACUs) consumed per second', 'Typically 6-way replication across 3 AZs']}
+
+[TRACE] Node: verify_claims
+  > Rules evaluated: 3, blocking failures: 1
+  > Rule: std.check_existence [block] -> FAIL
+    Target: product_names
+      - Aurora Serverless v3
+      - Aurora Serverless v2
+      - AWS Lambda
+      - AWS AppSync
+      - MySQL
+      - PostgreSQL
+    Evidence: Unrecognized entities: Aurora Serverless v3
+  > Rule: std.check_links [block] -> PASS
+    Target: urls
+    Evidence: No links to verify
+  > Rule: std.check_compute [warn] -> PASS
+    Target: performance_claims
+      - Scales compute capacity up and down automatically in seconds based on workload demand
+      - Scales in fine-grained increments of 0.5 ACUs (Aurora Capacity Units)
+      - Can scale from a minimum of 0.5 ACU to potentially hundreds
+      - You only pay for the Aurora Capacity Units (ACUs) consumed per second
+      - Typically 6-way replication across 3 AZs
+    Evidence: Extracted 5 claims: Scales compute capacity up and down automatically in seconds based on workload demand; Scales in fine-grained increments of 0.5 ACUs (Aurora Capacity Units); Can scale from a minimum of 0.5 ACU to potentially hundreds; You only pay for the Aurora Capacity Units (ACUs) consumed per second; Typically 6-way replication across 3 AZs
+
+[TRACE] Node: safety_gate (gate)
+  > Condition: input.blocking_failures == 0
+  > Evaluation: FAIL
+  > Routing: -> rejection (on_fail)
+
+[TRACE] Node: rejection (review)
+  > Actor: human
+  > Status: awaiting review
+  > Available actions: retry_with_search, reject, override
+
+[RUNTIME] Pipeline Status:
+  > Status: BLOCKED
+  > Reason: 1 blocking verification failure(s)
+  > Resolution: Awaiting human review at node 'rejection'
+  > The runtime refused to publish unverified content.

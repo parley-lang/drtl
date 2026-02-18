@@ -1,0 +1,80 @@
+name: "Aurora_Fact_Check"
+description: "Verify external product claims before publishing"
+version: "1.0"
+
+nodes:
+  # 1. GENERATION: Ask the model about Aurora v3
+  - id: generate_summary
+    type: generate
+    model: gemini/gemini-2.5-flash # anthropic/claude-3-haiku-20240307
+    prompt: "Summarize the key features of Aurora Serverless v3"
+    output_key: "raw_summary"
+
+  # 2. EXTRACTION: Convert raw text to structured claims
+  - id: extract_claims
+    type: generate
+    model: openai/gpt-4o-mini
+    prompt: |
+      Analyze this text and extract claims into JSON:
+
+      {{generate_summary.raw_summary}}
+
+      Return a JSON object with:
+      - product_names: List of AWS products, services, or version numbers mentioned
+      - urls: List of any URLs or documentation links
+      - performance_claims: List of any quantitative claims (speeds, costs, percentages)
+    output_format: json
+    output_key: "structured_claims"
+
+  # 3. VERIFICATION: Check extracted claims (Lever 2)
+  - id: verify_claims
+    type: verify
+    input: extract_claims.structured_claims
+    rules:
+      - id: std.check_existence
+        target: "product_names"
+        mode: block
+      - id: std.check_links
+        target: "urls"
+        mode: block
+      - id: std.check_compute
+        target: "performance_claims"
+        mode: warn
+    output_key: "verification_report"
+
+  # 4. GATE: Only proceed if verification passed
+  - id: safety_gate
+    type: gate
+    input: verify_claims.verification_report
+    condition: "input.blocking_failures == 0"
+    on_pass: publish
+    on_fail:
+      next: rejection
+      inject: verify_claims.verification_report
+
+  # 5a. SUCCESS PATH: Output verified summary
+  - id: publish
+    type: transform
+    operations:
+      - set: output
+        value:
+          summary: "{{generate_summary.raw_summary}}"
+          verification: "{{verify_claims.verification_report}}"
+          status: "verified"
+
+  # 5b. FAILURE PATH: Block and request review
+  - id: rejection
+    type: review
+    actor: human
+    input:
+      original_request: "Summarize Aurora Serverless v3 features"
+      verification_report: "{{injected}}"
+    actions: [retry_with_search, reject, override]
+
+edges:
+  - from: generate_summary
+    to: extract_claims
+  - from: extract_claims
+    to: verify_claims
+  - from: verify_claims
+    to: safety_gate
